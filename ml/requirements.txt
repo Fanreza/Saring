@@ -1,0 +1,13 @@
+# Versi dikunci: models/model.joblib di-pickle dengan versi ini, versi lain bisa gagal memuat model.
+tldextract==5.4.0
+pandas==3.0.6
+numpy==2.5.4
+scikit-learn==1.9.1
+xgboost==3.4.1
+shap==0.53.0
+matplotlib==3.11.2
+joblib==1.6.0
+fastapi==0.143.1
+pydantic==2.14.1
+uvicorn==0.54.0
+requests==2.34.2

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="id">
+<head>
+  <meta charset="utf-8">
+  <style>
+    :root { --bg: #0e0f13; --card: #16171d; --border: #26272f; --fg: #f2f2f5; --muted: #9d9fb0; --accent: #8b8ef0; --danger: #ff7b84; --ok: #5fd09a; }
+    * { box-sizing: border-box; }
+    body { width: 320px; margin: 0; padding: 16px; background: var(--bg); color: var(--fg); font: 14px/1.45 'Inter', system-ui, -apple-system, 'Segoe UI', sans-serif; }
+    header { display: flex; align-items: center; gap: 8px; font-weight: 650; margin-bottom: 14px; }
+    header svg { fill: var(--accent); }
+    #status { padding: 14px; border-radius: 12px; background: var(--card); border: 1px solid var(--border); }
+    .title { font-weight: 600; display: flex; align-items: center; gap: 8px; }
+    .title::before { content: ""; width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+    #status.bad .title { color: var(--danger); } #status.bad .title::before { background: var(--danger); }
+    #status.good .title { color: var(--ok); } #status.good .title::before { background: var(--ok); }
+    .sub { color: var(--muted); font-size: 12.5px; margin-top: 4px; overflow-wrap: anywhere; }
+    .row { display: flex; align-items: center; justify-content: space-between; margin-top: 12px; padding: 12px 14px; border-radius: 12px; background: var(--card); border: 1px solid var(--border); cursor: pointer; }
+    .switch { position: relative; width: 36px; height: 20px; flex: none; }
+    .switch input { position: absolute; inset: 0; opacity: 0; margin: 0; cursor: pointer; }
+    .switch span { position: absolute; inset: 0; border-radius: 999px; background: var(--border); transition: background .15s; pointer-events: none; }
+    .switch span::after { content: ""; position: absolute; top: 2px; left: 2px; width: 16px; height: 16px; border-radius: 50%; background: var(--fg); transition: transform .15s; }
+    .switch input:checked + span { background: var(--accent); }
+    .switch input:checked + span::after { transform: translateX(16px); }
+    .switch input:focus-visible + span { outline: 2px solid var(--accent); outline-offset: 2px; }
+    a { display: flex; justify-content: center; margin-top: 12px; padding: 10px; border-radius: 10px; color: var(--fg); text-decoration: none; background: var(--card); border: 1px solid var(--border); font-weight: 500; }
+    a:hover { border-color: var(--muted); }
+  </style>
+</head>
+<body>
+  <header>
+    <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><rect x="2" y="4" width="20" height="3" rx="1.5"/><rect x="5" y="10.5" width="14" height="3" rx="1.5"/><rect x="8.5" y="17" width="7" height="3" rx="1.5"/></svg>
+    Saring
+  </header>
+  <div id="status">
+    <div class="title" id="title">Belum ada data</div>
+    <div class="sub" id="sub"></div>
+  </div>
+  <label class="row">Proteksi otomatis
+    <span class="switch"><input type="checkbox" id="enabled"><span></span></span>
+  </label>
+  <a id="web" href="#" target="_blank">Cek link manual di web →</a>
+  <script src="config.js"></script>
+  <script src="popup.js"></script>
+</body>
+</html>

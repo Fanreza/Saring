@@ -1,0 +1,10 @@
+ml/.venv/
+ml/data/
+ml/models/
+__pycache__/
+web/node_modules/
+web/dist/
+gateway/gateway*
+gateway/data/
+.env
+web/.vitest/
