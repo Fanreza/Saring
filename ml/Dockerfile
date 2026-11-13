@@ -8,7 +8,7 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY features.py serve.py ./
-# model hasil train.py; folder models/ tidak ikut git, salin dulu ke server (lihat DEPLOY.md)
+# model hasil train.py; models/model.joblib ikut di git agar build bisa dari repo (lihat DEPLOY.md)
 COPY models/model.joblib models/model.joblib
 
 RUN useradd --system --no-create-home app

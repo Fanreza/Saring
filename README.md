@@ -294,6 +294,12 @@ The final model came out of four iterations. Two of them are the reason the data
 - The model was trained on a snapshot. Phishing changes quickly, so retrain periodically with fresh feeds: rerun `download_data.py`, `build_dataset.py`, and `train.py`, then update the numbers in `web/src/data.js`.
 - Saring is an aid, not a guarantee. Do not enter credentials on a site you doubt, even if Saring says it is safe.
 
+## Documentation
+
+- [DEPLOY.md](DEPLOY.md): deploy with Dokploy or a plain VPS (Docker Compose and Caddy).
+- [docs/Panduan-Pemakaian-Saring.pdf](docs/Panduan-Pemakaian-Saring.pdf): user guide in Indonesian, from installing the Chrome extension to using every page of the website.
+- [docs/brand.md](docs/brand.md): name, logo, color palette, typography, and tone of voice.
+
 ## Tech stack
 
 - **ML:** Python, pandas, scikit-learn, XGBoost, SHAP, tldextract, FastAPI, uvicorn
