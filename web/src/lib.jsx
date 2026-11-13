@@ -52,15 +52,28 @@ function addHistory(res) {
 // Link phishing ditulis "dijinakkan" saat dibagikan agar tidak bisa langsung diklik.
 export const defang = u => u.replace(/^http/i, 'hxxp').replace(/\./g, '[.]')
 
-export const go = hash => { location.hash = hash }
+// Pindah halaman tanpa memuat ulang: "/lapor?u=..." -> ubah URL lalu beri tahu App.
+export function navigate(to) {
+  history.pushState(null, '', to)
+  dispatchEvent(new PopStateEvent('popstate'))
+}
+export const go = navigate
 
-// Router hash sederhana: "#/lapor?u=..." -> { page: "lapor", params }
-export function parseHash(hash = location.hash, search = location.search) {
-  const [path, query = ''] = hash.replace(/^#\/?/, '').split('?')
-  const params = new URLSearchParams(query)
-  const legacy = new URLSearchParams(search).get('u') // ?u= dari versi lama / popup extension
-  if (!path && legacy) params.set('u', legacy)
-  return { page: path || 'cek', params }
+// Router berbasis path: "/lapor?u=..." -> { page: "lapor", params }.
+// Link lama berbentuk "/#/lapor?u=..." (versi sebelumnya, bookmark, dokumen) tetap dibaca.
+export function parseRoute(pathname = location.pathname, search = location.search, hash = location.hash) {
+  if (hash.startsWith('#/')) {
+    const [page, query = ''] = hash.slice(2).split('?')
+    return { page: page || 'cek', params: new URLSearchParams(query) }
+  }
+  const page = pathname.replace(/^\/+|\/+$/g, '')
+  return { page: page || 'cek', params: new URLSearchParams(search) }
+}
+
+// Alamat bersih untuk sebuah rute, dipakai merapikan link lama "/#/cek" menjadi "/cek".
+export function routeUrl({ page, params }) {
+  const q = params.toString()
+  return `/${page}${q ? `?${q}` : ''}`
 }
 
 export function Mark() {
@@ -116,7 +129,7 @@ export function ResultCard({ res, onReset }) {
 
       <div className="actions">
         <ShareButtons res={res} />
-        <a className="btn-plain" href={`#/lapor?u=${encodeURIComponent(res.url)}&k=${bad ? 'salah_blokir' : 'phishing_lolos'}`}>
+        <a className="btn-plain" href={`/lapor?u=${encodeURIComponent(res.url)}&k=${bad ? 'salah_blokir' : 'phishing_lolos'}`}>
           Hasil salah? Laporkan
         </a>
         {onReset && <button type="button" className="btn-plain" onClick={onReset}>Periksa link lain</button>}

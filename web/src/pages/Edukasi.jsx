@@ -53,8 +53,8 @@ export default function Edukasi() {
       </ol>
 
       <div className="cta-row">
-        <a className="btn-primary" href="#/cek">Periksa link sekarang</a>
-        <a className="btn-plain" href="#/lapor">Laporkan link</a>
+        <a className="btn-primary" href="/cek">Periksa link sekarang</a>
+        <a className="btn-plain" href="/lapor">Laporkan link</a>
       </div>
     </section>
   )

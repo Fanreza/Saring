@@ -68,6 +68,6 @@ chrome.runtime.onInstalled.addListener(() => {
 })
 chrome.contextMenus.onClicked.addListener(info => {
   if (info.menuItemId === 'saring-check' && info.linkUrl) {
-    chrome.tabs.create({ url: `${SARING_WEB}/#/cek?u=${encodeURIComponent(info.linkUrl)}` })
+    chrome.tabs.create({ url: `${SARING_WEB}/cek?u=${encodeURIComponent(info.linkUrl)}` })
   }
 })

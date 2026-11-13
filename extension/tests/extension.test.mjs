@@ -133,7 +133,7 @@ test('menu klik kanan dibuat saat instal dan membuka halaman Cek Link', () => {
   bg.listeners.installed()
   same(bg.calls.menus, [{ id: 'saring-check', title: 'Cek link dengan Saring', contexts: ['link'] }])
   bg.listeners.menu({ menuItemId: 'saring-check', linkUrl: 'https://phish.xyz/a?b=1' })
-  same(bg.calls.created, [{ url: `${WEB}/#/cek?u=https%3A%2F%2Fphish.xyz%2Fa%3Fb%3D1` }])
+  same(bg.calls.created, [{ url: `${WEB}/cek?u=https%3A%2F%2Fphish.xyz%2Fa%3Fb%3D1` }])
 })
 
 // ---------- halaman peringatan ----------

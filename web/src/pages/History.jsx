@@ -22,7 +22,7 @@ export default function History() {
       {items.length === 0 ? (
         <div className="panel empty">
           <p>Belum ada riwayat pemeriksaan.</p>
-          <a className="btn-primary" href="#/cek">Periksa link pertama</a>
+          <a className="btn-primary" href="/cek">Periksa link pertama</a>
         </div>
       ) : (
         <>
@@ -49,7 +49,7 @@ export default function History() {
                     <span className="row-end">
                       {h.model !== 'allowlist' && <span className="muted mono">{Math.round(h.score * 100)}</span>}
                       <Verdict res={h} />
-                      <a href={`#/cek?u=${encodeURIComponent(h.url)}`}>Periksa ulang</a>
+                      <a href={`/cek?u=${encodeURIComponent(h.url)}`}>Periksa ulang</a>
                       <button type="button" className="link-btn" aria-label={`Hapus ${h.url} dari riwayat`}
                         onClick={() => update(items.filter(x => x.url !== h.url))}>Hapus</button>
                     </span>

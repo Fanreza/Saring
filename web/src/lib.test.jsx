@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from 'vitest'
-import { api, checkUrl, defang, loadHistory, parseHash, saveHistory } from './lib.jsx'
+import { api, checkUrl, defang, loadHistory, parseRoute, routeUrl, saveHistory } from './lib.jsx'
 import { checkRoute, mockFetch } from './test-utils.js'
 
 beforeEach(() => localStorage.clear())
@@ -11,18 +11,31 @@ describe('defang', () => {
   })
 })
 
-describe('parseHash (router)', () => {
-  it('halaman dan parameter dari hash', () => {
-    const r = parseHash('#/lapor?u=https%3A%2F%2Fa.com&k=salah_blokir', '')
+describe('parseRoute (router)', () => {
+  it('halaman dan parameter dari path', () => {
+    const r = parseRoute('/lapor', '?u=https%3A%2F%2Fa.com&k=salah_blokir', '')
     expect(r.page).toBe('lapor')
     expect(r.params.get('u')).toBe('https://a.com')
     expect(r.params.get('k')).toBe('salah_blokir')
   })
-  it('hash kosong ke Cek Link, ?u= versi lama tetap didukung', () => {
-    expect(parseHash('', '').page).toBe('cek')
-    const r = parseHash('', '?u=https%3A%2F%2Fb.com')
+  it('path kosong ke Cek Link dan ?u= di halaman awal tetap didukung', () => {
+    expect(parseRoute('/', '', '').page).toBe('cek')
+    const r = parseRoute('/', '?u=https%3A%2F%2Fb.com', '')
     expect(r.page).toBe('cek')
     expect(r.params.get('u')).toBe('https://b.com')
+  })
+  it('garis miring di akhir diabaikan', () => {
+    expect(parseRoute('/admin/', '', '').page).toBe('admin')
+  })
+  it('link lama berbentuk #/ tetap terbaca', () => {
+    const r = parseRoute('/', '', '#/lapor?u=https%3A%2F%2Fa.com&k=salah_blokir')
+    expect(r.page).toBe('lapor')
+    expect(r.params.get('k')).toBe('salah_blokir')
+    expect(parseRoute('/', '', '#/admin').page).toBe('admin')
+  })
+  it('routeUrl menghasilkan alamat bersih tanpa #', () => {
+    expect(routeUrl(parseRoute('/', '', '#/cek?u=https%3A%2F%2Fa.com'))).toBe('/cek?u=https%3A%2F%2Fa.com')
+    expect(routeUrl(parseRoute('/', '', '#/admin'))).toBe('/admin')
   })
 })
 

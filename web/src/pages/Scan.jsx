@@ -83,7 +83,7 @@ export default function Scan() {
                       <span className="row-end">
                         {r.res.model !== 'allowlist' && <span className="muted mono">{Math.round(r.res.score * 100)}</span>}
                         <Verdict res={r.res} />
-                        <a href={`#/cek?u=${encodeURIComponent(r.url)}`}>Detail</a>
+                        <a href={`/cek?u=${encodeURIComponent(r.url)}`}>Detail</a>
                       </span>
                     ) : r.err ? <span className="tone-bad small">{r.err}</span> : <span className="muted small">Memeriksa...</span>}
                   </li>

@@ -47,7 +47,7 @@ for i in $(seq 1 90); do busy 8000 && busy 8787 && busy "$WEB_PORT" && break; sl
 echo
 echo "Saring siap:"
 echo "  Web      http://localhost:$WEB_PORT"
-echo "  Admin    http://localhost:$WEB_PORT/#/admin   (password: $ADMIN_PASSWORD, tidak tampil di menu)"
+echo "  Admin    http://localhost:$WEB_PORT/admin   (password: $ADMIN_PASSWORD, tidak tampil di menu)"
 echo "  Gateway  http://localhost:8787   ML service  http://localhost:8000"
 echo "Tekan Ctrl+C untuk menghentikan."
 while :; do sleep 3600; done # tunggu Ctrl+C

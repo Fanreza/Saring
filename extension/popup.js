@@ -10,7 +10,7 @@ toggle.onchange = () => chrome.storage.local.set({ enabled: toggle.checked })
 chrome.tabs.query({ active: true, currentWindow: true }).then(async ([tab]) => {
   const res = (await chrome.storage.session.get('tab:' + tab.id))['tab:' + tab.id]
   if (!res) return
-  document.getElementById('web').href = `${SARING_WEB}/#/cek?u=${encodeURIComponent(res.url)}`
+  document.getElementById('web').href = `${SARING_WEB}/cek?u=${encodeURIComponent(res.url)}`
   if (res.error) {
     title.textContent = 'Server tidak bisa dihubungi'
     sub.textContent = ''

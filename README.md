@@ -21,7 +21,7 @@ The user interface is in Indonesian, and the examples and scam patterns target I
 - **Message scan.** Paste a whole SMS, WhatsApp, or email text. Saring extracts up to 20 links and checks them in parallel.
 - **Local history.** The last 200 checks are stored in your browser (`localStorage`). Nothing is stored on a server per user.
 - **Report a mistake.** Users can report a phishing link that was missed or a safe site that was blocked. Reports go into a review queue.
-- **Admin panel.** At `/#/admin` (not shown in the menu), password protected. Review reports, mark them valid or invalid, and see check counts for the last 14 days.
+- **Admin panel.** At `/admin` (not shown in the menu), password protected. Review reports, mark them valid or invalid, and see check counts for the last 14 days.
 - **Education page.** Signs of a phishing link, common scam modes in Indonesia, and what to do after opening one.
 - **Model report page ("Tentang Model").** Datasets, methodology, metrics, feature importance, and the history of experiments, all inside the app.
 - **Browser extension.**
@@ -97,7 +97,7 @@ cd web && npm install && cd ..
 | Service | URL |
 | --- | --- |
 | Web app | http://localhost:5173 |
-| Admin panel | http://localhost:5173/#/admin (default password `saring-admin`, override with `ADMIN_PASSWORD=... ./start-dev.sh`) |
+| Admin panel | http://localhost:5173/admin (default password `saring-admin`, override with `ADMIN_PASSWORD=... ./start-dev.sh`) |
 | Gateway | http://localhost:8787 |
 | ML service | http://localhost:8000 |
 
@@ -171,7 +171,7 @@ Dokploy runs its own Traefik on ports 80 and 443 and issues the HTTPS certificat
    | `gateway.aethereal.top` | `/` | `gateway` | `8787` | off |
 
    The built website calls `/api/check` on its own domain, so the `/api` entry on the website host is required. `gateway.aethereal.top` is used by the browser extension. Both go straight to the gateway so that the rate limiter sees the visitor's real IP (`TRUST_PROXY=1` reads the last `X-Forwarded-For` entry, which must be the one Traefik adds).
-5. Click **Deploy**, wait about 10 seconds for the certificate, then open `https://your-domain/#/cek`.
+5. Click **Deploy**, wait about 10 seconds for the certificate, then open `https://your-domain/cek`.
 6. Test the API through the domain: `curl -X POST https://your-domain/api/check -H "Content-Type: application/json" -d '{"url":"https://bca-mobile-verifikasi.cfd/akun"}'` should return `"is_phishing": true`.
 7. The extension in this repository is already configured for `gateway.aethereal.top` and `saring.aethereal.top`. For other domains, edit `extension/config.js` (`SARING_API`, `SARING_WEB`) and `host_permissions` in `extension/manifest.json`.
 

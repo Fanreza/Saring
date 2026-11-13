@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Mark, parseHash } from './lib.jsx'
+import { Mark, navigate, parseRoute, routeUrl } from './lib.jsx'
 import Check from './pages/Check.jsx'
 import Scan from './pages/Scan.jsx'
 import History from './pages/History.jsx'
@@ -15,11 +15,23 @@ const MENU = [
 ]
 
 export default function App() {
-  const [route, setRoute] = useState(parseHash)
+  const [route, setRoute] = useState(parseRoute)
   useEffect(() => {
-    const on = () => { setRoute(parseHash()); scrollTo(0, 0) }
-    addEventListener('hashchange', on)
-    return () => removeEventListener('hashchange', on)
+    // link lama "/#/cek?u=..." dirapikan menjadi "/cek?u=..." tanpa memuat ulang
+    if (location.hash.startsWith('#/')) history.replaceState(null, '', routeUrl(parseRoute()))
+    const on = () => { setRoute(parseRoute()); scrollTo(0, 0) }
+    // klik link internal (href diawali "/") pindah halaman tanpa memuat ulang; link luar dan tab baru dibiarkan
+    const onClick = e => {
+      const a = e.target.closest?.('a[href^="/"]')
+      if (!a || e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return
+      if (a.target && a.target !== '_self') return
+      if (a.getAttribute('href').startsWith('//') || a.getAttribute('href').startsWith('/api/')) return
+      e.preventDefault()
+      navigate(a.getAttribute('href'))
+    }
+    addEventListener('popstate', on)
+    document.addEventListener('click', onClick)
+    return () => { removeEventListener('popstate', on); document.removeEventListener('click', onClick) }
   }, [])
 
   const { page, params } = route
@@ -29,9 +41,9 @@ export default function App() {
     <>
       <header className="topbar">
         <div className="wrap topbar-inner">
-          <a href="#/cek" className="wordmark"><Mark />Saring</a>
+          <a href="/cek" className="wordmark"><Mark />Saring</a>
           <nav aria-label="Menu utama">
-            {MENU.map(([k, l]) => <a key={k} href={`#/${k}`} aria-current={page === k ? 'page' : undefined}>{l}</a>)}
+            {MENU.map(([k, l]) => <a key={k} href={`/${k}`} aria-current={page === k ? 'page' : undefined}>{l}</a>)}
           </nav>
         </div>
       </header>
@@ -45,7 +57,7 @@ export default function App() {
         {page === 'model' && <Report />}
         {page === 'admin' && <Admin params={params} />}
         {!['cek', 'pindai', 'riwayat', 'lapor', 'edukasi', 'model', 'admin'].includes(page) && (
-          <section className="wrap page"><h1>Halaman tidak ditemukan</h1><p className="lede"><a href="#/cek">Kembali ke Cek Link</a></p></section>
+          <section className="wrap page"><h1>Halaman tidak ditemukan</h1><p className="lede"><a href="/cek">Kembali ke Cek Link</a></p></section>
         )}
       </main>
 
