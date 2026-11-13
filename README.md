@@ -153,7 +153,28 @@ docker compose up -d --build
 
 `ml/models/model.joblib` must exist before the build, because the ML image copies it in. Caddy gets an HTTPS certificate for `DOMAIN` automatically. The ML service is only reachable inside the compose network. The gateway stores its SQLite database in a Docker volume. Set `TRUST_PROXY=1` (already set in `docker-compose.yml`) only when the gateway is behind a trusted reverse proxy, since the client IP is then read from `X-Forwarded-For`.
 
-### 6. Run the tests
+### 6. Deploy with Dokploy
+
+Dokploy runs its own Traefik on ports 80 and 443 and issues the HTTPS certificate, so use `docker-compose.dokploy.yml` instead of `docker-compose.yml`. `ml/models/model.joblib` is committed to git for this reason, because the ML image copies it in during the build.
+
+1. Create an A record for your domain that points to the Dokploy server, **before** adding the domain in Dokploy.
+2. In Dokploy, create a service of type **Compose**, set Compose Type to **Docker Compose**, Provider to **GitHub**, repository `Fanreza/Saring`, branch `main`, and Compose Path `./docker-compose.dokploy.yml`.
+3. In the **Environment** tab, set `ADMIN_PASSWORD` to a long random value.
+4. In the **Domains** tab, add two entries for the same host, both with HTTPS on and the `letsencrypt` certificate:
+
+   | Path | Service | Container port | Strip Path |
+   | --- | --- | --- | --- |
+   | `/api` | `gateway` | `8787` | off |
+   | `/` | `web` | `80` | not applicable |
+
+   `/api` goes straight to the gateway so that the rate limiter sees the visitor's real IP (`TRUST_PROXY=1` reads the last `X-Forwarded-For` entry, which must be the one Traefik adds).
+5. Click **Deploy**, wait about 10 seconds for the certificate, then open `https://your-domain/#/cek`.
+6. Test the API through the domain: `curl -X POST https://your-domain/api/check -H "Content-Type: application/json" -d '{"url":"https://bca-mobile-verifikasi.cfd/akun"}'` should return `"is_phishing": true`.
+7. Point `extension/config.js` (`SARING_API`, `SARING_WEB`) and `host_permissions` in `extension/manifest.json` at your domain, then reload the extension.
+
+The SQLite database lives in the named volume `gateway-data`, which Dokploy can back up from its Volume Backups tab.
+
+### 7. Run the tests
 
 ```bash
 ./test-all.sh
