@@ -11,6 +11,8 @@ The product is made of four parts:
 | **Gateway** | Go HTTP API in front of the model: validation, allowlist, cache, rate limiting, user reports, admin panel, usage statistics. |
 | **ML service** | Python (FastAPI) service that turns a URL into 33 features, scores it with an XGBoost model, and explains the score with SHAP. |
 
+Hosted instance: website https://saring.aethereal.top, API https://gateway.aethereal.top (deployed with Dokploy, see [Deploy with Dokploy](#6-deploy-with-dokploy)).
+
 The user interface is in Indonesian, and the examples and scam patterns target Indonesia (BCA, BRI, Mandiri, DANA, OVO, Shopee, Tokopedia, and similar). The code comments are also mostly in Indonesian. This project started as a university thesis project (Kuliah).
 
 ## Features
@@ -105,9 +107,9 @@ Press Ctrl+C to stop. The script skips any port that is already in use.
 
 1. Open `chrome://extensions` (or `edge://extensions`) and turn on **Developer mode**.
 2. Click **Load unpacked** and select the `extension/` folder.
-3. Keep `./start-dev.sh` running. The extension talks to `http://localhost:8787` by default.
+3. The extension talks to the hosted server by default: API `https://gateway.aethereal.top`, website `https://saring.aethereal.top`. No local server is needed.
 
-To point the extension at a deployed server, edit `extension/config.js` (`SARING_API`, `SARING_WEB`) and set the same domain in `host_permissions` in `extension/manifest.json`.
+To use your own server instead (for example `./start-dev.sh`), edit `extension/config.js` (`SARING_API`, `SARING_WEB`) and set the same API host in `host_permissions` in `extension/manifest.json`, then reload the extension. For local development use `http://localhost:8787` and `http://localhost:5173`.
 
 ### 4. Use the API directly
 
@@ -160,17 +162,18 @@ Dokploy runs its own Traefik on ports 80 and 443 and issues the HTTPS certificat
 1. Create an A record for your domain that points to the Dokploy server, **before** adding the domain in Dokploy.
 2. In Dokploy, create a service of type **Compose**, set Compose Type to **Docker Compose**, Provider to **GitHub**, repository `Fanreza/Saring`, branch `main`, and Compose Path `./docker-compose.dokploy.yml`.
 3. In the **Environment** tab, set `ADMIN_PASSWORD` to a long random value.
-4. In the **Domains** tab, add two entries for the same host, both with HTTPS on and the `letsencrypt` certificate:
+4. In the **Domains** tab, add three entries, all with HTTPS on and the `letsencrypt` certificate. This is the setup used for `aethereal.top`:
 
-   | Path | Service | Container port | Strip Path |
-   | --- | --- | --- | --- |
-   | `/api` | `gateway` | `8787` | off |
-   | `/` | `web` | `80` | not applicable |
+   | Host | Path | Service | Container port | Strip Path |
+   | --- | --- | --- | --- | --- |
+   | `saring.aethereal.top` | `/` | `web` | `80` | not applicable |
+   | `saring.aethereal.top` | `/api` | `gateway` | `8787` | off |
+   | `gateway.aethereal.top` | `/` | `gateway` | `8787` | off |
 
-   `/api` goes straight to the gateway so that the rate limiter sees the visitor's real IP (`TRUST_PROXY=1` reads the last `X-Forwarded-For` entry, which must be the one Traefik adds).
+   The built website calls `/api/check` on its own domain, so the `/api` entry on the website host is required. `gateway.aethereal.top` is used by the browser extension. Both go straight to the gateway so that the rate limiter sees the visitor's real IP (`TRUST_PROXY=1` reads the last `X-Forwarded-For` entry, which must be the one Traefik adds).
 5. Click **Deploy**, wait about 10 seconds for the certificate, then open `https://your-domain/#/cek`.
 6. Test the API through the domain: `curl -X POST https://your-domain/api/check -H "Content-Type: application/json" -d '{"url":"https://bca-mobile-verifikasi.cfd/akun"}'` should return `"is_phishing": true`.
-7. Point `extension/config.js` (`SARING_API`, `SARING_WEB`) and `host_permissions` in `extension/manifest.json` at your domain, then reload the extension.
+7. The extension in this repository is already configured for `gateway.aethereal.top` and `saring.aethereal.top`. For other domains, edit `extension/config.js` (`SARING_API`, `SARING_WEB`) and `host_permissions` in `extension/manifest.json`.
 
 The SQLite database lives in the named volume `gateway-data`, which Dokploy can back up from its Volume Backups tab.
 

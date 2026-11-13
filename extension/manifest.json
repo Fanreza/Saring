@@ -10,7 +10,7 @@
     "contextMenus"
   ],
   "host_permissions": [
-    "http://localhost:8787/*"
+    "https://gateway.aethereal.top/*"
   ],
   "background": {
     "service_worker": "background.js"
