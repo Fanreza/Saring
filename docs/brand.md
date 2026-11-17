@@ -4,6 +4,16 @@ _Status: active_
 
 Saring memeriksa apakah sebuah link termasuk phishing hanya dari teks alamatnya, tanpa membuka halamannya. Tersedia sebagai web dan Chrome extension, untuk pengguna internet Indonesia yang sering menerima link dari WhatsApp, SMS, dan email.
 
+Saring dibuat untuk membantu pengguna mengenali potensi phishing sebelum membuka sebuah link.
+
+Prinsip utama Saring adalah pencegahan, transparansi, dan kemudahan penggunaan. Pengguna tidak perlu memahami istilah keamanan siber untuk mengetahui apakah sebuah link patut dicurigai.
+
+Saring hanya menganalisis teks alamat URL dan tidak membuka halaman tujuan. Privasi pengguna menjadi prioritas dalam setiap proses pemeriksaan.
+
+Hasil pemeriksaan merupakan indikasi berdasarkan pola dan karakteristik URL, bukan jaminan mutlak bahwa sebuah situs aman atau berbahaya.
+
+Saring tidak boleh memberikan rasa aman palsu. Jika hasil pemeriksaan tidak meyakinkan, sampaikan ketidakpastian secara jelas.
+
 ## Nama dan logo
 
 - **Nama:** Saring. Selalu ditulis "Saring", bukan "SARING" atau "saring".
@@ -56,3 +66,15 @@ Saat menjelaskan cara kerja, pakai angka nyata (216.470 link, 93,2%) daripada kl
 
 - Lakukan: satu warna aksen per layar, angka sebagai pusat perhatian, tata letak asimetris (konten kiri, ringkasan kanan).
 - Hindari: em dash dalam teks, gradasi ungu-biru, grid tiga kolom ikon + judul + paragraf, judul aspiratif yang kabur.
+
+## Batasan Pemeriksaan
+
+Saring memeriksa karakteristik alamat URL, bukan keseluruhan isi halaman website.
+
+Saring tidak dapat menjamin bahwa setiap link berbahaya akan terdeteksi atau bahwa setiap link yang tidak menunjukkan indikasi phishing benar-benar aman.
+
+Pengguna tetap harus berhati-hati ketika menerima link, terutama yang meminta informasi pribadi, data perbankan, kata sandi, atau kode OTP.
+
+Saring merupakan alat bantu pencegahan dan tidak menggantikan kewaspadaan pengguna saat menjelajahi internet.
+
+Setiap klaim mengenai tingkat akurasi, jumlah URL yang diperiksa, dan kemampuan deteksi harus didukung oleh data pengujian yang dapat diverifikasi.
