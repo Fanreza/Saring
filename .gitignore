@@ -9,3 +9,5 @@ gateway/gateway*
 gateway/data/
 .env
 web/.vitest/
+.coverage
+cover.out

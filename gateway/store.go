@@ -232,12 +232,18 @@ func updateReport(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	res, err := db.Exec(`UPDATE reports SET status = ? WHERE id = ?`, req.Status, id)
-	if n, _ := res.RowsAffected(); err == nil && n == 0 {
+	if err != nil { // res bernilai nil bila Exec gagal, jadi err harus dicek sebelum res dipakai
+		log.Printf("ubah status laporan: %v", err)
+		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "gagal menyimpan status"})
+		return
+	}
+	if n, _ := res.RowsAffected(); n == 0 {
 		writeJSON(w, http.StatusNotFound, map[string]string{"error": "laporan tidak ditemukan"})
 		return
 	}
-	rows, err2 := db.Query(`SELECT id, url, kind, note, status, created FROM reports WHERE id = ?`, id)
-	if err != nil || err2 != nil {
+	rows, err := db.Query(`SELECT id, url, kind, note, status, created FROM reports WHERE id = ?`, id)
+	if err != nil {
+		log.Printf("ambil laporan setelah ubah status: %v", err)
 		writeJSON(w, http.StatusInternalServerError, map[string]string{"error": "gagal menyimpan status"})
 		return
 	}

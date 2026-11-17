@@ -185,6 +185,13 @@ The SQLite database lives in the named volume `gateway-data`, which Dokploy can 
 
 This runs `go vet` and `go test` for the gateway, `pytest` for the ML code and an end-to-end test, `vitest` for the web app, and `node --test` for the extension.
 
+**Black-box and white-box tests.** Black-box cases (equivalence partitioning, boundary values, decision tables, use cases) are in `ml/tests/cases_blackbox.py` and `ml/tests/test_blackbox.py`. They start the real gateway and model and only use HTTP. White-box tests are `gateway/coverage_test.go` and `ml/tests/test_whitebox.py`. Measure coverage with:
+
+```bash
+cd gateway && go test -coverprofile=cover.out ./... && go tool cover -func=cover.out
+cd ml && .venv/Scripts/python -m coverage run -m pytest tests && .venv/Scripts/python -m coverage report   # needs requirements-dev.txt
+```
+
 ## Methodology
 
 The full write-up with charts is in the app under **Tentang Model**. This is the summary.
