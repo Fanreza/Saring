@@ -337,4 +337,5 @@ The final model came out of four iterations. Two of them are the reason the data
 ## License
 
 No license has been chosen yet. Until one is added, all rights are reserved by the author.
+
 All content, materials, source code, and other original works in this project are protected by copyright. No permission is granted to copy, modify, distribute, or use this work without prior written permission from the author.
