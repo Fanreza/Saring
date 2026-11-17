@@ -1,0 +1,38 @@
+# Saring untuk Dokploy. Compose Path di Dokploy: ./docker-compose.dokploy.yml
+# HTTPS dan domain diurus Traefik milik Dokploy (tab Domains), jadi tidak ada port 80/443 di sini.
+# Lokal atau VPS tanpa Dokploy tetap memakai docker-compose.yml.
+#
+# Tab Domains harus berisi DUA entri untuk domain yang sama (HTTPS aktif, certificate letsencrypt):
+#   1. Host = domain kamu, Path = /api, Service = gateway, Container Port = 8787, Strip Path = mati
+#   2. Host = domain kamu, Path = /,    Service = web,     Container Port = 80
+# /api langsung ke gateway (tanpa Caddy di tengah) supaya TRUST_PROXY membaca IP pengunjung yang benar.
+# Dengan dua perantara, entri terakhir X-Forwarded-For adalah IP perantara, bukan pengunjung.
+services:
+  ml:
+    build: ./ml
+    restart: unless-stopped
+    expose: ["8000"] # hanya bisa diakses dari dalam jaringan compose
+  gateway:
+    build: ./gateway
+    restart: unless-stopped
+    environment:
+      ML_URL: http://ml:8000
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?isi ADMIN_PASSWORD di tab Environment Dokploy}
+      TRUST_PROXY: "1" # IP asli pengguna = entri terakhir X-Forwarded-For yang ditambahkan Traefik
+      DB: /data/saring.db
+    volumes:
+      - gateway-data:/data # database SQLite (laporan + statistik); named volume agar bisa di-backup Dokploy
+    expose: ["8787"]
+    depends_on:
+      ml:
+        condition: service_healthy
+  web:
+    build: ./web
+    restart: unless-stopped
+    environment:
+      DOMAIN: ":80" # Caddy hanya menyajikan HTTP di dalam jaringan, tanpa sertifikat sendiri
+    expose: ["80"]
+    depends_on:
+      - gateway
+volumes:
+  gateway-data:

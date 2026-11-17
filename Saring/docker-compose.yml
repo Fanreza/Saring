@@ -1,0 +1,41 @@
+# Saring: docker compose up -d --build   (isi .env dulu, lihat DEPLOY.md)
+services:
+  ml:
+    build: ./ml
+    restart: unless-stopped
+    expose: ["8000"] # hanya bisa diakses dari dalam jaringan compose
+
+  gateway:
+    build: ./gateway
+    restart: unless-stopped
+    environment:
+      ML_URL: http://ml:8000
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?isi ADMIN_PASSWORD di file .env}
+      TRUST_PROXY: "1" # IP asli pengguna dari header X-Forwarded-For yang dikirim Caddy
+      DB: /data/saring.db
+    volumes:
+      - gateway-data:/data # database SQLite (laporan + statistik)
+    expose: ["8787"]
+    depends_on:
+      ml:
+        condition: service_healthy
+
+  web:
+    build: ./web
+    restart: unless-stopped
+    environment:
+      DOMAIN: ${DOMAIN:?isi DOMAIN di file .env}
+    ports:
+      - "80:80"
+      - "443:443"
+      - "443:443/udp"
+    volumes:
+      - caddy-data:/data # sertifikat HTTPS
+      - caddy-config:/config
+    depends_on:
+      - gateway
+
+volumes:
+  gateway-data:
+  caddy-data:
+  caddy-config:

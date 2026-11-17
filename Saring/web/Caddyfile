@@ -1,0 +1,21 @@
+# Caddy: HTTPS otomatis (Let's Encrypt) untuk DOMAIN, sajikan web, teruskan /api ke gateway.
+{$DOMAIN:localhost} {
+	encode zstd gzip
+
+	handle /api/* {
+		reverse_proxy gateway:8787
+	}
+
+	handle {
+		root * /srv
+		try_files {path} /index.html
+		file_server
+	}
+
+	header {
+		Strict-Transport-Security "max-age=31536000"
+		X-Content-Type-Options nosniff
+		Referrer-Policy strict-origin-when-cross-origin
+		-Server
+	}
+}

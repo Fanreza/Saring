@@ -1,0 +1,11 @@
+ml/.venv/
+ml/data/
+ml/models/*
+!ml/models/model.joblib
+__pycache__/
+web/node_modules/
+web/dist/
+gateway/gateway*
+gateway/data/
+.env
+web/.vitest/
