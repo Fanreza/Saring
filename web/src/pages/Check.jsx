@@ -7,6 +7,7 @@ const EXAMPLES = [
   'https://metamask-wallet-restore.vercel.app/seed',
   'http://paypal-login.verify-account.xyz/signin',
   'https://en.wikipedia.org/wiki/Phishing',
+  'https://etilang-kejaksaan.xyz/payment',
 ]
 
 export default function Check({ initial = '' }) {
